@@ -20,12 +20,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/productos", (IProductoService servicio) =>
+var grupo = app.MapGroup("/productos").WithTags("Productos");
+
+grupo.MapGet("/", (IProductoService servicio) =>
 {
     return Results.Ok(servicio.ObtenerTodos());
 });
 
-app.MapGet("/productos/{id}", (int id, IProductoService servicio) =>
+grupo.MapGet("/{id}", (int id, IProductoService servicio) =>
 {
     Producto? producto = servicio.ObtenerProducto(id);
     if (producto == null)
@@ -35,7 +37,7 @@ app.MapGet("/productos/{id}", (int id, IProductoService servicio) =>
     return Results.Ok(producto);
 });
 
-app.MapPost("/productos", (ProductoBody producto, IProductoService servicio) =>
+grupo.MapPost("/", (ProductoBody producto, IProductoService servicio) =>
 {
     if (string.IsNullOrWhiteSpace(producto.Nombre))
     {
@@ -50,7 +52,7 @@ app.MapPost("/productos", (ProductoBody producto, IProductoService servicio) =>
     return Results.Created($"/productos/{productoAgregado.Id}",productoAgregado);
 });
 
-app.MapPut("/productos/{id}",(int id, ProductoBody producto, IProductoService servicio) => 
+grupo.MapPut("/{id}",(int id, ProductoBody producto, IProductoService servicio) => 
 {
     string nombre = producto.Nombre;
 
@@ -69,7 +71,7 @@ app.MapPut("/productos/{id}",(int id, ProductoBody producto, IProductoService se
     return Results.Ok(productoActualizado);
 });
 
-app.MapDelete("/productos/{id}", (int id, IProductoService servicio)=>{
+grupo.MapDelete("/{id}", (int id, IProductoService servicio)=>{
     bool eliminado = servicio.Eliminar(id);
     if (!eliminado)
     {
