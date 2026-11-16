@@ -1,3 +1,4 @@
+using ProductosApi.Models;
 using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,10 +83,6 @@ app.MapDelete("/productos/{id}", (int id, IProductoService servicio)=>{
 
 app.Run();
 
-
-record Producto(int Id, string Nombre);
-record ProductoBody(string Nombre);
-
 class ProductoService : IProductoService
 {
     private readonly List<Producto> _productos = new List<Producto> {
@@ -131,6 +128,7 @@ class ProductoService : IProductoService
 
     }
 }
+
 
 
 interface IProductoService
