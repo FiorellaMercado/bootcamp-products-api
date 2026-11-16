@@ -48,6 +48,25 @@ app.MapPost("/productos", (ProductoBody producto, IProductoService servicio) =>
     return Results.Created($"/productos/{productoAgregado.Id}",productoAgregado);
 });
 
+app.MapPut("/productos/{id}",(int id, ProductoBody producto, IProductoService servicio) => 
+{
+    string nombre = producto.Nombre;
+
+    if (string.IsNullOrWhiteSpace(nombre))
+    {
+        return Results.ValidationProblem( new Dictionary<string, string[]>
+        {
+            {"nombre", new[]{"El nombre del producto es obligatorio"}}
+        });
+    }
+    Producto? productoActualizado= servicio.Actualizar(id, nombre);
+    if (productoActualizado == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(productoActualizado);
+});
+
 app.MapDelete("/productos/{id}", (int id, IProductoService servicio)=>{
     bool eliminado = servicio.Eliminar(id);
     if (!eliminado)
@@ -94,6 +113,17 @@ class ProductoService : IProductoService
         return producto;
     }
 
+    public Producto? Actualizar(int id, string nombre)
+    {
+        int index = _productos.FindIndex(producto => producto.Id == id);
+        if (index == -1)
+        {
+            return null;
+        }
+        _productos[index] = new Producto(id, nombre);
+        return _productos[index];
+    }
+
     public bool Eliminar(int id)
     {
         int eliminados = _productos.RemoveAll(c=> c.Id == id);
@@ -108,5 +138,6 @@ interface IProductoService
     List<Producto> ObtenerTodos();
     Producto? ObtenerProducto(int id);
     Producto Agregar(string nombre);
+    Producto? Actualizar(int id, string nombre);
     bool Eliminar(int id);
 }
