@@ -1,3 +1,4 @@
+namespace ProductosApi.Endpoints;
 using ProductosApi.Models;
 using ProductosApi.Services;
 public static class ProductosEndpoints
@@ -19,11 +20,11 @@ public static class ProductosEndpoints
                 return Results.NotFound();
             }
             return Results.Ok(producto);
-        });
+        }).WithName("ObtenerProducto");
 
-        grupo.MapPost("/", (ProductoBody producto, IProductoService servicio) =>
+        grupo.MapPost("/", (ProductoBody body, IProductoService servicio) =>
         {
-            if (string.IsNullOrWhiteSpace(producto.Nombre))
+            if (string.IsNullOrWhiteSpace(body.Nombre))
             {
                 return Results.ValidationProblem( new Dictionary<string, string[]>
                 {
@@ -31,14 +32,14 @@ public static class ProductosEndpoints
                 });
             }
             
-            Producto productoAgregado = servicio.Agregar(producto.Nombre);
+            Producto productoAgregado = servicio.Agregar(body.Nombre);
 
-            return Results.Created($"/productos/{productoAgregado.Id}",productoAgregado);
+            return Results.CreatedAtRoute("ObtenerProducto", new {id= productoAgregado.Id}, productoAgregado);
         });
 
-        grupo.MapPut("/{id}",(int id, ProductoBody producto, IProductoService servicio) => 
+        grupo.MapPut("/{id}",(int id, ProductoBody body, IProductoService servicio) => 
         {
-            string nombre = producto.Nombre;
+            string nombre = body.Nombre;
 
             if (string.IsNullOrWhiteSpace(nombre))
             {

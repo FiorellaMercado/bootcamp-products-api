@@ -1,4 +1,4 @@
-using ProductosApi.Models;
+using ProductosApi.Endpoints;
 using ProductosApi.Services;
 using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
