@@ -1,2 +1,6 @@
 namespace ProductosApi.Models;
-record Producto(int Id, string Nombre);
+public class Producto
+{
+    public int Id {get; set;}
+    public string Nombre {get; set;} = string.Empty;
+}
