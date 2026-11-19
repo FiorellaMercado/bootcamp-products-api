@@ -1,6 +1,7 @@
 namespace ProductosApi.Services;
 using ProductosApi.Models;
 using ProductosApi.Data;
+using ProductosApi.Common;
 using Microsoft.EntityFrameworkCore;
 
 class ProductoService(ProductosDbContext db) : IProductoService
@@ -10,9 +11,9 @@ class ProductoService(ProductosDbContext db) : IProductoService
     {
         return db.Productos.AsNoTracking().ToList();
     }
-    public Producto? ObtenerProducto(int id)
+    public Producto ObtenerProducto(int id)
     {
-        return db.Productos.Find(id);
+        return db.Productos.Find(id) ?? throw NotFoundException.Producto(id);
     }
 
     public Producto Agregar(string nombre)
@@ -23,21 +24,18 @@ class ProductoService(ProductosDbContext db) : IProductoService
         return producto;
     }
 
-    public Producto? Actualizar(int id, string nombre)
+    public Producto Actualizar(int id, string nombre)
     {
-        var producto = db.Productos.Find(id);
-        if (producto is null) return null;
+        var producto = ObtenerProducto(id);
         producto.Nombre= nombre;
         db.SaveChanges();
         return producto;
     }
 
-    public bool Eliminar(int id)
+    public void Eliminar(int id)
     {
-        var producto = db.Productos.Find(id);
-        if (producto is null) return false;
+        var producto = ObtenerProducto(id);
         db.Productos.Remove(producto);
         db.SaveChanges();
-        return true;
     }
 }

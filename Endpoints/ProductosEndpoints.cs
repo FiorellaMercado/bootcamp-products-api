@@ -13,15 +13,11 @@ public static class ProductosEndpoints
             return TypedResults.Ok(servicio.ObtenerTodos());
         });
 
-        grupo.MapGet("/{id}", Results<Ok<Producto>, NotFound> (int id, IProductoService servicio) =>
+        grupo.MapGet("/{id}", (int id, IProductoService servicio) =>
         {
-            Producto? producto = servicio.ObtenerProducto(id);
-            if (producto == null)
-            {
-                return TypedResults.NotFound();
-            }
-            return TypedResults.Ok(producto);
-        }).WithName("ObtenerProducto");
+            return TypedResults.Ok(servicio.ObtenerProducto(id));
+        }).WithName("ObtenerProducto")
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         grupo.MapPost("/", Results<CreatedAtRoute<Producto>,ValidationProblem> (ProductoBody body, IProductoService servicio) =>
         {
@@ -38,7 +34,7 @@ public static class ProductosEndpoints
             return TypedResults.CreatedAtRoute(productoAgregado,"ObtenerProducto", new {id= productoAgregado.Id});
         });
 
-        grupo.MapPut("/{id}",Results<Ok<Producto>, NotFound, ValidationProblem>(int id, ProductoBody body, IProductoService servicio) => 
+        grupo.MapPut("/{id}",Results<Ok<Producto>, ValidationProblem>(int id, ProductoBody body, IProductoService servicio) => 
         {
             string nombre = body.Nombre;
 
@@ -49,23 +45,15 @@ public static class ProductosEndpoints
                     {"nombre", new[]{"El nombre del producto es obligatorio"}}
                 });
             }
-            Producto? productoActualizado= servicio.Actualizar(id, nombre);
-            if (productoActualizado == null)
-            {
-                return TypedResults.NotFound();
-            }
-            return TypedResults.Ok(productoActualizado);
-        });
-
-        grupo.MapDelete("/{id}", Results<NotFound,NoContent> (int id, IProductoService servicio)=>{
-            bool eliminado = servicio.Eliminar(id);
-            if (!eliminado)
-            {
-                return TypedResults.NotFound();
-            }
             
+            return TypedResults.Ok(servicio.Actualizar(id, nombre));
+        }).ProducesProblem(StatusCodes.Status404NotFound);
+
+        grupo.MapDelete("/{id}", (int id, IProductoService servicio)=>{
+            
+            servicio.Eliminar(id);
             return TypedResults.NoContent();
-        });
+        }).ProducesProblem(StatusCodes.Status404NotFound);
 
         return app;
 

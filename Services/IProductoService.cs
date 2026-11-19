@@ -4,8 +4,8 @@ using ProductosApi.Models;
 interface IProductoService
 {
     List<Producto> ObtenerTodos();
-    Producto? ObtenerProducto(int id);
+    Producto ObtenerProducto(int id);
     Producto Agregar(string nombre);
-    Producto? Actualizar(int id, string nombre);
-    bool Eliminar(int id);
+    Producto Actualizar(int id, string nombre);
+    void Eliminar(int id);
 }

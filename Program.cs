@@ -3,6 +3,7 @@ using ProductosApi.Services;
 using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using ProductosApi.Data;
+using ProductosApi.ExceptionHandling;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,9 +14,15 @@ builder.Services.AddDbContext<ProductosDbContext>(options=> options.UseInMemoryD
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
 
+builder.Services.AddProblemDetails();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
 
 app.Services.InicializarBaseDeDatos();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
