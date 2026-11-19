@@ -1,4 +1,5 @@
 namespace ProductosApi.Endpoints;
+using Microsoft.AspNetCore.Http.HttpResults;
 using ProductosApi.Models;
 using ProductosApi.Services;
 public static class ProductosEndpoints
@@ -9,24 +10,24 @@ public static class ProductosEndpoints
 
         grupo.MapGet("/", (IProductoService servicio) =>
         {
-            return Results.Ok(servicio.ObtenerTodos());
+            return TypedResults.Ok(servicio.ObtenerTodos());
         });
 
-        grupo.MapGet("/{id}", (int id, IProductoService servicio) =>
+        grupo.MapGet("/{id}", Results<Ok<Producto>, NotFound> (int id, IProductoService servicio) =>
         {
             Producto? producto = servicio.ObtenerProducto(id);
             if (producto == null)
             {
-                return Results.NotFound();
+                return TypedResults.NotFound();
             }
-            return Results.Ok(producto);
+            return TypedResults.Ok(producto);
         }).WithName("ObtenerProducto");
 
-        grupo.MapPost("/", (ProductoBody body, IProductoService servicio) =>
+        grupo.MapPost("/", Results<CreatedAtRoute<Producto>,ValidationProblem> (ProductoBody body, IProductoService servicio) =>
         {
             if (string.IsNullOrWhiteSpace(body.Nombre))
             {
-                return Results.ValidationProblem( new Dictionary<string, string[]>
+                return TypedResults.ValidationProblem( new Dictionary<string, string[]>
                 {
                     {"nombre", new[]{"El nombre del producto es obligatorio"}}
                 });
@@ -34,16 +35,16 @@ public static class ProductosEndpoints
             
             Producto productoAgregado = servicio.Agregar(body.Nombre);
 
-            return Results.CreatedAtRoute("ObtenerProducto", new {id= productoAgregado.Id}, productoAgregado);
+            return TypedResults.CreatedAtRoute(productoAgregado,"ObtenerProducto", new {id= productoAgregado.Id});
         });
 
-        grupo.MapPut("/{id}",(int id, ProductoBody body, IProductoService servicio) => 
+        grupo.MapPut("/{id}",Results<Ok<Producto>, NotFound, ValidationProblem>(int id, ProductoBody body, IProductoService servicio) => 
         {
             string nombre = body.Nombre;
 
             if (string.IsNullOrWhiteSpace(nombre))
             {
-                return Results.ValidationProblem( new Dictionary<string, string[]>
+                return TypedResults.ValidationProblem( new Dictionary<string, string[]>
                 {
                     {"nombre", new[]{"El nombre del producto es obligatorio"}}
                 });
@@ -51,19 +52,19 @@ public static class ProductosEndpoints
             Producto? productoActualizado= servicio.Actualizar(id, nombre);
             if (productoActualizado == null)
             {
-                return Results.NotFound();
+                return TypedResults.NotFound();
             }
-            return Results.Ok(productoActualizado);
+            return TypedResults.Ok(productoActualizado);
         });
 
-        grupo.MapDelete("/{id}", (int id, IProductoService servicio)=>{
+        grupo.MapDelete("/{id}", Results<NotFound,NoContent> (int id, IProductoService servicio)=>{
             bool eliminado = servicio.Eliminar(id);
             if (!eliminado)
             {
-                return Results.NotFound();
+                return TypedResults.NotFound();
             }
             
-            return Results.NoContent();
+            return TypedResults.NoContent();
         });
 
         return app;
