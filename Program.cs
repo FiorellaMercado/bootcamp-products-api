@@ -15,6 +15,8 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 
 var app = builder.Build();
 
+app.Services.InicializarBaseDeDatos();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
