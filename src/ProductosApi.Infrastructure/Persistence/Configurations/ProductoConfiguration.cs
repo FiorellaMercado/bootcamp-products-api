@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProductosApi.Models;
+using ProductosApi.Domain.Productos;
 
-namespace ProductosApi.Data.Configurations;
+namespace ProductosApi.Infrastructure.Persistence.Configurations;
 
 internal sealed class ProductoConfiguration : IEntityTypeConfiguration<Producto>
 {

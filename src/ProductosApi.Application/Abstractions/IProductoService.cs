@@ -1,7 +1,8 @@
-namespace ProductosApi.Services;
-using ProductosApi.Models;
+namespace ProductosApi.Application.Abstraccions;
 
-interface IProductoService
+using ProductosApi.Domain.Productos;
+
+public interface IProductoService
 {
     List<Producto> ObtenerTodos();
     Producto ObtenerProducto(int id);

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using ProductosApi.Common;
+using ProductosApi.Application.Common;
 
 namespace ProductosApi.ExceptionHandling;
 

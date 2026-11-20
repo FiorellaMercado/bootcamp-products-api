@@ -1,4 +1,4 @@
-namespace ProductosApi.Models;
+namespace ProductosApi.Domain.Productos;
 public class Producto
 {
     public int Id {get; set;}

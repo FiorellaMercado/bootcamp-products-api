@@ -1,7 +1,8 @@
 namespace ProductosApi.Endpoints;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProductosApi.Models;
-using ProductosApi.Services;
+using ProductosApi.Domain.Productos;
+using ProductosApi.Application.Abstraccions;
 public static class ProductosEndpoints
 {
     public static IEndpointRouteBuilder MapProductosEndpoints(this IEndpointRouteBuilder app)

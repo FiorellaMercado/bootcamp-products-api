@@ -1,7 +1,8 @@
-namespace ProductosApi.Services;
-using ProductosApi.Models;
-using ProductosApi.Data;
-using ProductosApi.Common;
+namespace ProductosApi.Infrastructure.Services;
+using ProductosApi.Domain.Productos;
+using ProductosApi.Application.Common;
+using ProductosApi.Application.Abstraccions;
+using ProductosApi.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 class ProductoService(ProductosDbContext db) : IProductoService

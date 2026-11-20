@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProductosApi.Domain\ProductosApi.Domain.csproj" />
+    <ProjectReference Include="..\ProductosApi.Application\ProductosApi.Application.csproj" />
+    <ProjectReference Include="..\ProductosApi.Infrastructure\ProductosApi.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

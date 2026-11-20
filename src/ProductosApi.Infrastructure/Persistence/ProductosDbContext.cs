@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using ProductosApi.Models;
+using ProductosApi.Domain.Productos;
 
-namespace ProductosApi.Data;
+namespace ProductosApi.Infrastructure.Persistence;
 
 internal sealed class ProductosDbContext(DbContextOptions<ProductosDbContext> options) : DbContext(options)
 {
