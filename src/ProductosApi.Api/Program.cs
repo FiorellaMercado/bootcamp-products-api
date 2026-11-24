@@ -1,6 +1,7 @@
 using ProductosApi.Endpoints;
 using Scalar.AspNetCore;
 using ProductosApi.ExceptionHandling;
+using ProductosApi.Application;
 using ProductosApi.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
 
 var app = builder.Build();
