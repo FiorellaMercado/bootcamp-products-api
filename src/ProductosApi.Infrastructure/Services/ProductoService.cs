@@ -1,7 +1,7 @@
 namespace ProductosApi.Infrastructure.Services;
 using ProductosApi.Domain.Productos;
 using ProductosApi.Application.Common;
-using ProductosApi.Application.Abstraccions;
+using ProductosApi.Application.Abstractions;
 using ProductosApi.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

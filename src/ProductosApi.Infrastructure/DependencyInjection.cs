@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ProductosApi.Application.Abstraccions;
+using ProductosApi.Application.Abstractions;
 using ProductosApi.Infrastructure.Persistence;
 using ProductosApi.Infrastructure.Services;
 

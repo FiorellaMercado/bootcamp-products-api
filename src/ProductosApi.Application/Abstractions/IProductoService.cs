@@ -1,4 +1,4 @@
-namespace ProductosApi.Application.Abstraccions;
+namespace ProductosApi.Application.Abstractions;
 
 using ProductosApi.Domain.Productos;
 
