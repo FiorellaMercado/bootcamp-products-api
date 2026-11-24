@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using ProductosApi.Models;
 using ProductosApi.Domain.Productos;
 using ProductosApi.Application.Abstractions;
+using ProductosApi.Application.Abstractions.Messaging;
+using ProductosApi.Application.Productos.Queries;
 public static class ProductosEndpoints
 {
     public static IEndpointRouteBuilder MapProductosEndpoints(this IEndpointRouteBuilder app)
@@ -14,9 +16,9 @@ public static class ProductosEndpoints
             return TypedResults.Ok(servicio.ObtenerTodos());
         });
 
-        grupo.MapGet("/{id}", (int id, IProductoService servicio) =>
+        grupo.MapGet("/{id}", async (int id, ISender sender, CancellationToken ct) =>
         {
-            return TypedResults.Ok(servicio.ObtenerProducto(id));
+            return TypedResults.Ok(await sender.Send(new ObtenerProductoQuery(id), ct));
         }).WithName("ObtenerProducto")
         .ProducesProblem(StatusCodes.Status404NotFound);
 
