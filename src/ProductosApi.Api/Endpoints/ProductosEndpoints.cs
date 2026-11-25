@@ -11,10 +11,10 @@ public static class ProductosEndpoints
     {
         var grupo = app.MapGroup("/productos").WithTags("Productos");
 
-        grupo.MapGet("/", (IProductoService servicio) =>
+        grupo.MapGet("/", async (ISender sender, CancellationToken ct) =>
         {
-            return TypedResults.Ok(servicio.ObtenerTodos());
-        });
+            return TypedResults.Ok(await sender.Send(new ListarProductosQuery(),ct));
+        }).WithName("ListarProductos");
 
         grupo.MapGet("/{id}", async (int id, ISender sender, CancellationToken ct) =>
         {

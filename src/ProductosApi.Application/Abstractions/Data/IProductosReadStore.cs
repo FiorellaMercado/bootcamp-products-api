@@ -6,4 +6,5 @@ public interface IProductosReadStore
 {
     /// <returns>null si el producto no existe.</returns>
     Task<ProductoResponse?> ObtenerAsync(int id, CancellationToken ct = default);
+    Task<IReadOnlyList<ProductoResponse>> ListarAsync(CancellationToken ct = default);
 }
