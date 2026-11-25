@@ -5,6 +5,7 @@ using ProductosApi.Infrastructure.Persistence;
 using ProductosApi.Infrastructure.Services;
 using ProductosApi.Application.Abstractions.Data;
 using ProductosApi.Infrastructure.ReadModels;
+using ProductosApi.Domain.Productos;
 
 
 namespace ProductosApi.Infrastructure;
@@ -15,7 +16,14 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string databaseName = "ProductosDb")
     {
         services.AddDbContext<ProductosDbContext>(options => options.UseInMemoryDatabase(databaseName));
+        //Escritura
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ProductosDbContext>());
+        services.AddScoped<IProductoRepository, ProductoRepository>();
+        
+        
         services.AddScoped<IProductoService, ProductoService>();
+        
+        //Lectura
         services.AddScoped<IProductosReadStore, ProductosReadStore>();
         return services;
     }
