@@ -7,6 +7,7 @@ using ProductosApi.Application.Abstractions.Messaging;
 using ProductosApi.Application.Productos.Queries;
 using ProductosApi.Application.Productos.Commands.AgregarProducto;
 using ProductosApi.Application.Productos;
+using ProductosApi.Application.Productos.Commands.ActualizarProducto;
 
 public static class ProductosEndpoints
 {
@@ -41,19 +42,17 @@ public static class ProductosEndpoints
             return TypedResults.CreatedAtRoute(productoAgregado,"ObtenerProducto", new {id= productoAgregado.Id});
         });
 
-        grupo.MapPut("/{id}",Results<Ok<Producto>, ValidationProblem>(int id, ProductoBody body, IProductoService servicio) => 
+        grupo.MapPut("/{id}", async Task<Results<Ok<ProductoResponse>, ValidationProblem>> (int id, ProductoBody body, ISender sender, CancellationToken ct) =>
         {
-            string nombre = body.Nombre;
-
-            if (string.IsNullOrWhiteSpace(nombre))
+            if (string.IsNullOrWhiteSpace(body.Nombre))
             {
-                return TypedResults.ValidationProblem( new Dictionary<string, string[]>
+                return TypedResults.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    {"nombre", new[]{"El nombre del producto es obligatorio"}}
+                    { "nombre", new[] { "El nombre del producto es obligatorio" } }
                 });
             }
-            
-            return TypedResults.Ok(servicio.Actualizar(id, nombre));
+
+            return TypedResults.Ok(await sender.Send(new ActualizarProductoCommand(id, body.Nombre), ct));
         }).ProducesProblem(StatusCodes.Status404NotFound);
 
         grupo.MapDelete("/{id}", (int id, IProductoService servicio)=>{
